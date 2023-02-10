@@ -3,7 +3,7 @@ import { getId, Inputs } from './Utils';
 
 interface Props {
   inputs: Inputs;
-  setInputs: (draft: object) => void;
+  setInputs: (e: (draft: Inputs) => void) => void;
 }
 
 function InputForm({ inputs, setInputs }: Props) {
@@ -18,7 +18,7 @@ function InputForm({ inputs, setInputs }: Props) {
         name="step"
         value={step}
         onChange={({ target: { value } }) =>
-          setInputs((draft: Inputs) => {
+          setInputs((draft) => {
             draft.step = String(value);
           })
         }
@@ -33,7 +33,7 @@ function InputForm({ inputs, setInputs }: Props) {
         name="wait"
         value={wait}
         onChange={({ target: { value } }) =>
-          setInputs((draft: Inputs) => {
+          setInputs((draft) => {
             draft.wait = String(value);
           })
         }
@@ -47,7 +47,7 @@ function InputForm({ inputs, setInputs }: Props) {
       <select
         value={sceneMax}
         onChange={({ target: { value } }) =>
-          setInputs((draft: Inputs) => {
+          setInputs((draft) => {
             draft.sceneMax = String(value);
           })
         }

@@ -6,7 +6,8 @@ export function getId() {
 }
 
 export interface Inputs {
-  step?: string;
-  sceneMax?: string;
-  wait?: string;
+  step: string;
+  sceneMax: string;
+  wait: string;
+  colors: Array<Array<number>>;
 }
