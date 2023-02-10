@@ -54,7 +54,10 @@ function Result({ inputs }: Props) {
       context.fillRect(0, 0, width, height);
 
       colorStepChangedTime = now;
-      if (now - colorChangedTime < zeroToMax + stepTime * Number(inputs.wait)) {
+      if (
+        now - colorChangedTime <
+        zeroToMax + stepTime * Number(inputs.waitTime)
+      ) {
         requestId = setTimeout(animator);
         return;
       }
@@ -68,7 +71,7 @@ function Result({ inputs }: Props) {
 
       previousColor = [...colors];
       colorIndex += 1;
-      colorIndex %= Number(inputs.sceneMax);
+      colorIndex %= Number(inputs.colorsMax);
       colorChangedTime = now;
       requestId = setTimeout(animator);
     };
@@ -84,7 +87,7 @@ function Result({ inputs }: Props) {
     <div>
       <h2>결과</h2>
       <canvas ref={canvasRef} width={width} height={height} />
-      <p>{inputs.sceneMax}</p>
+      <p>{inputs.colorsMax}</p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getId, getTimes, Inputs } from './Utils';
+import { getId, Inputs } from './Utils';
 
 interface Props {
   inputs: Inputs;
@@ -7,53 +7,45 @@ interface Props {
 }
 
 function InputForm({ inputs, setInputs }: Props) {
-  const { zeroToMax, stepTime } = getTimes(inputs);
-  const { step, sceneMax, wait } = inputs;
+  const { changeTime, colorsMax, waitTime } = inputs;
 
   return (
     <div>
       <h2>입력</h2>
-      <h3>Dimming 제로백 시간 단계 설정</h3>
+      <h3>Dimming 변화 시간</h3>
       <select
-        name="step"
-        value={step}
+        name="changeTime"
+        value={changeTime}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.step = String(value);
+            draft.changeTime = String(value);
           })
         }
       >
         {Array.from({ length: 255 }).map((_, i) => (
-          <option key={getId()}>{i + 1}</option>
+          <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
         ))}
       </select>
-      <p>{`제로백 시간: ${step} X 250 ms = ${zeroToMax} ms`}</p>
-      <p>{`Dimming 1 단계 변화 시간: ${step} X (250 / 255) ms = ${Math.round(
-        stepTime,
-      )} ms`}</p>
       <h3>Scene 전환 대기 시간</h3>
       <select
-        name="wait"
-        value={wait}
+        name="waitTime"
+        value={waitTime}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.wait = String(value);
+            draft.waitTime = String(value);
           })
         }
       >
         {Array.from({ length: 255 }).map((_, i) => (
-          <option key={getId()}>{i}</option>
+          <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
         ))}
       </select>
-      <p>{`${wait} X ${stepTime}ms = ${Math.round(
-        Number(wait) * stepTime,
-      )} ms`}</p>
       <h3>Scene 개수</h3>
       <select
-        value={sceneMax}
+        value={colorsMax}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.sceneMax = String(value);
+            draft.colorsMax = String(value);
           })
         }
       >
@@ -62,7 +54,7 @@ function InputForm({ inputs, setInputs }: Props) {
         ))}
       </select>
       <h3>Scene</h3>
-      {Array.from({ length: Number(sceneMax) }).map(() => (
+      {Array.from({ length: Number(colorsMax) }).map(() => (
         <div>
           <input name="color" key={getId()} type="color" />
         </div>

@@ -8,9 +8,9 @@ import { Inputs } from './Utils';
 
 function App() {
   const [inputs, setInputs] = useImmer<Inputs>({
-    sceneMax: '7',
-    step: '10',
-    wait: '0',
+    colorsMax: '7',
+    changeTime: '2.5',
+    waitTime: '1.0',
     colors: [
       [255, 255, 255],
       [0, 0, 0],

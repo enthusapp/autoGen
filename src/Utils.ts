@@ -6,14 +6,14 @@ export function getId() {
 }
 
 export interface Inputs {
-  step: string;
-  sceneMax: string;
-  wait: string;
+  changeTime: string;
+  colorsMax: string;
+  waitTime: string;
   colors: Array<Array<number>>;
 }
 
 export function getTimes(inputs: Inputs) {
-  const zeroToMax = Number(inputs.step) * 250;
+  const zeroToMax = Number(inputs.changeTime) * 250;
   return {
     zeroToMax,
     stepTime: zeroToMax / 255,
