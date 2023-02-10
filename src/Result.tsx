@@ -64,9 +64,9 @@ function Result({ inputs }: Props) {
         nowColors[i] = Math.round(previousColor + colorChangedTime / stepTime);
       });
       // eslint-disable-next-line no-console
-      console.log(colorChangedTime, nowColors, stepTime);
+      // console.log(colorChangedTime, nowColors, stepTime);
 
-      context.fillStyle = `RGB(${nowColors[0]}, ${nowColors[0]}, ${nowColors[0]})`;
+      context.fillStyle = `RGB(${nowColors[0]}, ${nowColors[1]}, ${nowColors[2]})`;
       context.fillRect(0, 0, width, height);
 
       stepChangedTime = now;

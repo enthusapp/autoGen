@@ -1,5 +1,5 @@
 import React from 'react';
-import { getId, Inputs } from './Utils';
+import { getId, hexToRgb, Inputs, rgbTohex } from './Utils';
 
 interface Props {
   inputs: Inputs;
@@ -12,7 +12,7 @@ function InputForm({ inputs, setInputs }: Props) {
   return (
     <div>
       <h2>입력</h2>
-      <h3>Dimming 변화 시간</h3>
+      <h3>0 → 100 변화 시간</h3>
       <select
         name="colorChangeTime"
         value={colorChangeTime}
@@ -26,7 +26,7 @@ function InputForm({ inputs, setInputs }: Props) {
           <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
         ))}
       </select>
-      <h3>Scene 전환 대기 시간</h3>
+      <h3>Scene 전환 시간</h3>
       <select
         name="sceneChangeTime"
         value={sceneChangeTime}
@@ -54,9 +54,19 @@ function InputForm({ inputs, setInputs }: Props) {
         ))}
       </select>
       <h3>Scene</h3>
-      {Array.from({ length: Number(colorsMax) }).map(() => (
+      {Array.from({ length: Number(colorsMax) }).map((_, i) => (
         <div>
-          <input name="color" key={getId()} type="color" />
+          <input
+            name="color"
+            key={getId()}
+            type="color"
+            value={rgbTohex(inputs.colors[i] || [0, 0, 0])}
+            onChange={({ target: { value } }) =>
+              setInputs((draft) => {
+                draft.colors[i] = hexToRgb(value);
+              })
+            }
+          />
         </div>
       ))}
     </div>
