@@ -1,5 +1,5 @@
 import React from 'react';
-import { getId, Inputs } from './Utils';
+import { getId, getTimes, Inputs } from './Utils';
 
 interface Props {
   inputs: Inputs;
@@ -7,13 +7,13 @@ interface Props {
 }
 
 function InputForm({ inputs, setInputs }: Props) {
-  const stepTime = Number(inputs.step) * 0.25;
+  const { zeroToMax, stepTime } = getTimes(inputs);
   const { step, sceneMax, wait } = inputs;
 
   return (
     <div>
       <h2>입력</h2>
-      <h3>Dimming 밝기가 1 단계씩 높아지는 시간</h3>
+      <h3>Dimming 제로백 시간 단계 설정</h3>
       <select
         name="step"
         value={step}
@@ -27,7 +27,10 @@ function InputForm({ inputs, setInputs }: Props) {
           <option key={getId()}>{i + 1}</option>
         ))}
       </select>
-      <p>{`${step} X 0.25s = ${stepTime} 초`}</p>
+      <p>{`제로백 시간: ${step} X 250 ms = ${zeroToMax} ms`}</p>
+      <p>{`Dimming 1 단계 변화 시간: ${step} X (250 / 255) ms = ${Math.round(
+        stepTime,
+      )} ms`}</p>
       <h3>Scene 전환 대기 시간</h3>
       <select
         name="wait"
@@ -42,7 +45,9 @@ function InputForm({ inputs, setInputs }: Props) {
           <option key={getId()}>{i}</option>
         ))}
       </select>
-      <p>{`${wait} X ${stepTime}s = ${Number(wait) * stepTime} 초`}</p>
+      <p>{`${wait} X ${stepTime}ms = ${Math.round(
+        Number(wait) * stepTime,
+      )} ms`}</p>
       <h3>Scene 개수</h3>
       <select
         value={sceneMax}

@@ -11,7 +11,10 @@ function App() {
     sceneMax: '7',
     step: '10',
     wait: '0',
-    colors: [[255, 255, 255]],
+    colors: [
+      [255, 255, 255],
+      [0, 0, 0],
+    ],
   });
 
   return (

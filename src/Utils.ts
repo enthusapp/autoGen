@@ -11,3 +11,11 @@ export interface Inputs {
   wait: string;
   colors: Array<Array<number>>;
 }
+
+export function getTimes(inputs: Inputs) {
+  const zeroToMax = Number(inputs.step) * 250;
+  return {
+    zeroToMax,
+    stepTime: zeroToMax / 255,
+  };
+}
