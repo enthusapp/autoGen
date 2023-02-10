@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useImmer } from 'use-immer';
 import { getId } from './Utils';
 
 function InputForm() {
-  const [sceneMax, setSceneMax] = useState('7');
-  const [step, setStep] = useState('10');
-  const [wait, setWait] = useState('0');
+  const [inputs, setInputs] = useImmer({
+    sceneMax: '7',
+    step: '10',
+    wait: '0',
+  });
 
-  const stepTime = Number(step) * 0.25;
+  const stepTime = Number(inputs.step) * 0.25;
+  const { step, sceneMax, wait } = inputs;
 
   return (
     <div>
@@ -15,7 +19,11 @@ function InputForm() {
       <select
         name="step"
         value={step}
-        onChange={({ target: { value } }) => setStep(value)}
+        onChange={({ target: { value } }) =>
+          setInputs((draft) => {
+            draft.step = String(value);
+          })
+        }
       >
         {Array.from({ length: 255 }).map((_, i) => (
           <option key={getId()}>{i + 1}</option>
@@ -26,7 +34,11 @@ function InputForm() {
       <select
         name="wait"
         value={wait}
-        onChange={({ target: { value } }) => setWait(value)}
+        onChange={({ target: { value } }) =>
+          setInputs((draft) => {
+            draft.wait = String(value);
+          })
+        }
       >
         {Array.from({ length: 255 }).map((_, i) => (
           <option key={getId()}>{i}</option>
@@ -36,7 +48,11 @@ function InputForm() {
       <h3>Scene 개수</h3>
       <select
         value={sceneMax}
-        onChange={({ target: { value } }) => setSceneMax(value)}
+        onChange={({ target: { value } }) =>
+          setInputs((draft) => {
+            draft.sceneMax = String(value);
+          })
+        }
       >
         {Array.from({ length: 20 }).map((_, i) => (
           <option key={getId()}>{i + 1}</option>

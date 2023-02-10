@@ -19,6 +19,8 @@
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.6",
     "typescript": "^4.9.4",
+    "immer": "^9.0.16",
+    "use-immer": "^0.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
