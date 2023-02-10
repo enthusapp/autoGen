@@ -1,14 +1,12 @@
 import React from 'react';
-import { useImmer } from 'use-immer';
-import { getId } from './Utils';
+import { getId, Inputs } from './Utils';
 
-function InputForm() {
-  const [inputs, setInputs] = useImmer({
-    sceneMax: '7',
-    step: '10',
-    wait: '0',
-  });
+interface Props {
+  inputs: Inputs;
+  setInputs: (draft: object) => void;
+}
 
+function InputForm({ inputs, setInputs }: Props) {
   const stepTime = Number(inputs.step) * 0.25;
   const { step, sceneMax, wait } = inputs;
 
@@ -20,7 +18,7 @@ function InputForm() {
         name="step"
         value={step}
         onChange={({ target: { value } }) =>
-          setInputs((draft) => {
+          setInputs((draft: Inputs) => {
             draft.step = String(value);
           })
         }
@@ -35,7 +33,7 @@ function InputForm() {
         name="wait"
         value={wait}
         onChange={({ target: { value } }) =>
-          setInputs((draft) => {
+          setInputs((draft: Inputs) => {
             draft.wait = String(value);
           })
         }
@@ -49,7 +47,7 @@ function InputForm() {
       <select
         value={sceneMax}
         onChange={({ target: { value } }) =>
-          setInputs((draft) => {
+          setInputs((draft: Inputs) => {
             draft.sceneMax = String(value);
           })
         }
