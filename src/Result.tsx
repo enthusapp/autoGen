@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { getTimes, Inputs } from './Utils';
+import { Inputs } from './Utils';
 
 interface Props {
   inputs: Inputs;
@@ -10,78 +10,85 @@ const height = 200;
 
 function Result({ inputs }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { zeroToMax, stepTime } = getTimes(inputs);
 
   useEffect(() => {
-    let requestId: NodeJS.Timeout;
-    let colorStepChangedTime = performance.now();
-    let colorChangedTime = performance.now();
-    const currentColor = [...inputs.colors[0]];
-    let previousColor = [...inputs.colors[0]];
-    let colorIndex = 0;
+    const stepTime = (Number(inputs.colorChangeTime) * 1000) / 255;
+    let requestId: number;
+    let stepChangedTime = performance.now();
+    let previousTime = performance.now();
+    const nowColors = [...inputs.colors[0]];
+    let previousColors = inputs.colors[0];
+    let targetColors = inputs.colors[0];
+    let targetIndex = 0;
 
     const animator = () => {
       const canvas = canvasRef.current;
       if (!canvas) {
-        requestId = setTimeout(animator);
+        requestId = requestAnimationFrame(animator);
         return;
       }
 
       const context = canvas.getContext('2d');
       if (!context) {
-        requestId = setTimeout(animator);
+        requestId = requestAnimationFrame(animator);
         return;
       }
 
       const now = performance.now();
-      if (now - colorStepChangedTime < stepTime) {
-        requestId = setTimeout(animator);
+      if (now - stepChangedTime < stepTime) {
+        requestId = requestAnimationFrame(animator);
         return;
       }
 
-      const colors = inputs.colors[colorIndex] || [0, 0, 0];
+      const colorChangedTime = now - previousTime;
 
       Array.from({ length: 3 }).forEach((_, i) => {
-        currentColor[i] =
-          (colors[i] - previousColor[i]) *
+        const previousColor = previousColors[i];
+        const targetColor = targetColors[i];
+        const zeorToMaxTime =
           stepTime *
-          (now - colorStepChangedTime);
-        if (previousColor[i] < colors[i]) currentColor[i] += 1;
-        else if (currentColor[i] > colors[i]) currentColor[i] -= 1;
-      });
+          (targetColor - previousColor) *
+          (previousColor > targetColor ? -1 : 1);
 
-      context.fillStyle = `RGB(${currentColor[0]}, ${currentColor[0]}, ${currentColor[0]})`;
+        if (zeorToMaxTime < colorChangedTime) {
+          nowColors[i] = targetColor;
+          return;
+        }
+
+        if (previousColor > targetColor) {
+          nowColors[i] = Math.round(
+            previousColor - colorChangedTime / stepTime,
+          );
+          return;
+        }
+        nowColors[i] = Math.round(previousColor + colorChangedTime / stepTime);
+      });
+      // eslint-disable-next-line no-console
+      console.log(colorChangedTime, nowColors, stepTime);
+
+      context.fillStyle = `RGB(${nowColors[0]}, ${nowColors[0]}, ${nowColors[0]})`;
       context.fillRect(0, 0, width, height);
 
-      colorStepChangedTime = now;
-      if (
-        now - colorChangedTime <
-        zeroToMax + stepTime * Number(inputs.sceneChangeTime)
-      ) {
-        requestId = setTimeout(animator);
+      stepChangedTime = now;
+      if (now - previousTime < Number(inputs.sceneChangeTime) * 1000) {
+        requestId = requestAnimationFrame(animator);
         return;
       }
-      // eslint-disable-next-line no-console
-      console.log(
-        now - colorChangedTime,
-        colorIndex,
-        currentColor,
-        inputs.colors[colorIndex],
-      );
 
-      previousColor = [...colors];
-      colorIndex += 1;
-      colorIndex %= Number(inputs.colorsMax);
-      colorChangedTime = now;
-      requestId = setTimeout(animator);
+      previousColors = inputs.colors[targetIndex] || [0, 0, 0];
+      targetIndex += 1;
+      targetIndex %= Number(inputs.colorsMax);
+      targetColors = inputs.colors[targetIndex] || [0, 0, 0];
+      previousTime = now;
+      requestId = requestAnimationFrame(animator);
     };
 
-    requestId = setTimeout(animator);
+    requestId = requestAnimationFrame(animator);
 
     return () => {
-      if (requestId) clearTimeout(requestId);
+      if (requestId) cancelAnimationFrame(requestId);
     };
-  }, [inputs, zeroToMax, stepTime]);
+  }, [inputs]);
 
   return (
     <div>

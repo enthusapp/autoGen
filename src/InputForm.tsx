@@ -7,18 +7,18 @@ interface Props {
 }
 
 function InputForm({ inputs, setInputs }: Props) {
-  const { changeTime, colorsMax, sceneChangeTime } = inputs;
+  const { colorChangeTime, colorsMax, sceneChangeTime } = inputs;
 
   return (
     <div>
       <h2>입력</h2>
       <h3>Dimming 변화 시간</h3>
       <select
-        name="changeTime"
-        value={changeTime}
+        name="colorChangeTime"
+        value={colorChangeTime}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.changeTime = String(value);
+            draft.colorChangeTime = String(value);
           })
         }
       >
