@@ -7,7 +7,7 @@ interface Props {
 }
 
 function InputForm({ inputs, setInputs }: Props) {
-  const { changeTime, colorsMax, waitTime } = inputs;
+  const { changeTime, colorsMax, sceneChangeTime } = inputs;
 
   return (
     <div>
@@ -28,11 +28,11 @@ function InputForm({ inputs, setInputs }: Props) {
       </select>
       <h3>Scene 전환 대기 시간</h3>
       <select
-        name="waitTime"
-        value={waitTime}
+        name="sceneChangeTime"
+        value={sceneChangeTime}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.waitTime = String(value);
+            draft.sceneChangeTime = String(value);
           })
         }
       >

@@ -8,7 +8,7 @@ export function getId() {
 export interface Inputs {
   changeTime: string;
   colorsMax: string;
-  waitTime: string;
+  sceneChangeTime: string;
   colors: Array<Array<number>>;
 }
 

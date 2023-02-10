@@ -56,7 +56,7 @@ function Result({ inputs }: Props) {
       colorStepChangedTime = now;
       if (
         now - colorChangedTime <
-        zeroToMax + stepTime * Number(inputs.waitTime)
+        zeroToMax + stepTime * Number(inputs.sceneChangeTime)
       ) {
         requestId = setTimeout(animator);
         return;
