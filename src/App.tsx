@@ -5,6 +5,7 @@ import { useImmer } from 'use-immer';
 import Result from './Result';
 import InputForm from './InputForm';
 import { Inputs } from './Utils';
+import Description from './Description';
 
 function App() {
   const [inputs, setInputs] = useImmer<Inputs>({
@@ -18,6 +19,8 @@ function App() {
   return (
     <Router>
       <div>
+        <Description />
+        <br />
         <InputForm inputs={inputs} setInputs={setInputs} />
         <br />
         <Result inputs={inputs} />
