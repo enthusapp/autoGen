@@ -11,10 +11,7 @@ function App() {
     colorsMax: '2',
     colorChangeTime: '2.0',
     sceneChangeTime: '2.5',
-    colors: [
-      [255, 255, 255],
-      [0, 0, 0],
-    ],
+    colors: ['#ffffff', '#000000'],
   });
 
   return (

@@ -1,13 +1,20 @@
-import React from 'react';
-import { getId, hexToRgb, Inputs, rgbTohex } from './Utils';
+import React, { useMemo } from 'react';
+import { getId, Inputs } from './Utils';
 
 interface Props {
   inputs: Inputs;
   setInputs: (e: (draft: Inputs) => void) => void;
 }
 
+const Array255 = Array.from({ length: 255 });
+const Array20 = Array.from({ length: 20 });
+
 function InputForm({ inputs, setInputs }: Props) {
   const { colorChangeTime, colorsMax, sceneChangeTime } = inputs;
+  const colorInputArray = useMemo(
+    () => Array.from({ length: Number(colorsMax) }),
+    [colorsMax],
+  );
 
   return (
     <div>
@@ -18,11 +25,11 @@ function InputForm({ inputs, setInputs }: Props) {
         value={colorChangeTime}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.colorChangeTime = String(value);
+            draft.colorChangeTime = value;
           })
         }
       >
-        {Array.from({ length: 255 }).map((_, i) => (
+        {Array255.map((_, i) => (
           <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
         ))}
       </select>
@@ -32,11 +39,11 @@ function InputForm({ inputs, setInputs }: Props) {
         value={sceneChangeTime}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.sceneChangeTime = String(value);
+            draft.sceneChangeTime = value;
           })
         }
       >
-        {Array.from({ length: 255 }).map((_, i) => (
+        {Array255.map((_, i) => (
           <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
         ))}
       </select>
@@ -45,29 +52,29 @@ function InputForm({ inputs, setInputs }: Props) {
         value={colorsMax}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
-            draft.colorsMax = String(value);
+            draft.colorsMax = value;
+            draft.colors = Array.from({ length: Number(value) }).map(
+              (_, i) => draft.colors[i] || '#000000',
+            );
           })
         }
       >
-        {Array.from({ length: 20 }).map((_, i) => (
+        {Array20.map((_, i) => (
           <option key={getId()}>{i + 1}</option>
         ))}
       </select>
       <h3>Scene</h3>
-      {Array.from({ length: Number(colorsMax) }).map((_, i) => (
-        <div>
-          <input
-            name="color"
-            key={getId()}
-            type="color"
-            value={rgbTohex(inputs.colors[i] || [0, 0, 0])}
-            onChange={({ target: { value } }) =>
-              setInputs((draft) => {
-                draft.colors[i] = hexToRgb(value);
-              })
-            }
-          />
-        </div>
+      {colorInputArray.map((_, i) => (
+        <input
+          name="color"
+          type="color"
+          value={inputs.colors[i]}
+          onChange={({ target: { value } }) =>
+            setInputs((draft) => {
+              draft.colors[i] = value;
+            })
+          }
+        />
       ))}
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Inputs } from './Utils';
+import { hexToRgb, Inputs } from './Utils';
 
 interface Props {
   inputs: Inputs;
@@ -16,9 +16,9 @@ function Result({ inputs }: Props) {
     let requestId: number;
     let stepChangedTime = performance.now();
     let previousTime = performance.now();
-    const nowColors = [...inputs.colors[0]];
-    let previousColors = inputs.colors[0];
-    let targetColors = inputs.colors[0];
+    const nowColors = [...hexToRgb(inputs.colors[0])];
+    let previousColors = hexToRgb(inputs.colors[0]);
+    let targetColors = hexToRgb(inputs.colors[0]);
     let targetIndex = 0;
 
     const animator = () => {
@@ -75,10 +75,10 @@ function Result({ inputs }: Props) {
         return;
       }
 
-      previousColors = inputs.colors[targetIndex] || [0, 0, 0];
+      previousColors = targetColors;
       targetIndex += 1;
       targetIndex %= Number(inputs.colorsMax);
-      targetColors = inputs.colors[targetIndex] || [0, 0, 0];
+      targetColors = hexToRgb(inputs.colors[targetIndex]) || [0, 0, 0];
       previousTime = now;
       requestId = requestAnimationFrame(animator);
     };

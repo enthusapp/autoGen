@@ -10,7 +10,7 @@ export interface Inputs {
   colorChangeTime: string;
   colorsMax: string;
   sceneChangeTime: string;
-  colors: Array<Array<number>>;
+  colors: Array<string>;
 }
 
 export function hexToRgb(gr: string) {
