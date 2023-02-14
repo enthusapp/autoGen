@@ -16,6 +16,7 @@ function Result({ inputs }: Props) {
     colorChangeTime: colorChangeTimeString,
     colorsMax: colorsMaxString,
     colors: colorStrings,
+    white,
   } = inputs;
 
   const colorChangeTime = Number(colorChangeTimeString);
@@ -79,13 +80,13 @@ function Result({ inputs }: Props) {
       context.fillStyle = `RGB(${nowColors[0]}, ${nowColors[1]}, ${nowColors[2]})`;
       context.fillRect(0, 0, width, height);
 
+      // eslint-disable-next-line no-console
+      // console.log(colorChangedTime, nowColors, stepTime);
       stepChangedTime = now;
       if (now - previousTime < (colorChangeTime + sceneChangeWaitTime) * 1000) {
         restart();
         return;
       }
-      // eslint-disable-next-line no-console
-      // console.log(colorChangedTime, nowColors, stepTime);
 
       previousColors = targetColors;
       targetIndex += 1;
@@ -102,11 +103,37 @@ function Result({ inputs }: Props) {
     };
   }, [stepTime, colors, colorChangeTime, sceneChangeWaitTime, colorsMax]);
 
+  const autoAloneDelay = Math.round(colorChangeTime * 4);
+  const is3CH = white === 'X';
+
+  const code = `#undef PWM_CH_MAX
+#define PWM_CH_MAX\t\t${is3CH ? 3 : 4}
+
+#define AUTORUN_SPEED\t\t${Math.round(
+    ((colorChangeTime + sceneChangeWaitTime) * 1000) / autoAloneDelay,
+  )}
+
+#define AUTORUN_SENARIO_MAX\t${colorsMax}
+
+unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
+  {${colors
+    .map((color) => color.join(', '))
+    .join(`${is3CH ? '' : `, ${white}`}},\n  {`)}}
+};
+
+#define AUTO_ALONE_DELAY	${autoAloneDelay}
+`;
   return (
     <div>
       <h2>결과</h2>
+      <h3>시뮬레이션</h3>
       <canvas ref={canvasRef} width={width} height={height} />
-      <p>{inputs.colorsMax}</p>
+      <h3>코드</h3>
+      <pre>
+        <div className="sourceCode">
+          <code>{code}</code>
+        </div>
+      </pre>
     </div>
   );
 }

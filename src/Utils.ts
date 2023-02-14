@@ -11,6 +11,7 @@ export interface Inputs {
   colorsMax: string;
   sceneChangeWaitTime: string;
   colors: Array<string>;
+  white: string;
 }
 
 export function hexToRgb(gr: string) {
@@ -29,8 +30,10 @@ export function fillZero(e: string) {
   return e.length === 1 ? `0${e}` : e;
 }
 
+export function toHexString(int: number) {
+  return fillZero(int.toString(16));
+}
+
 export function rgbTohex(rgb: Array<number>) {
-  return `#${fillZero(rgb[0].toString(16))}${fillZero(
-    rgb[1].toString(16),
-  )}${fillZero(rgb[2].toString(16))}`;
+  return `#${toHexString(rgb[0])}${toHexString(rgb[1])}${toHexString(rgb[2])}`;
 }

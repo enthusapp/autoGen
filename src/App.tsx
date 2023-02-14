@@ -12,14 +12,15 @@ function App() {
     colorChangeTime: '2.0',
     sceneChangeWaitTime: '2.5',
     colors: ['#ffffff', '#000000'],
+    white: 'X',
   });
 
   return (
     <Router>
       <div>
-        <Result inputs={inputs} />
-        <br />
         <InputForm inputs={inputs} setInputs={setInputs} />
+        <br />
+        <Result inputs={inputs} />
       </div>
     </Router>
   );
