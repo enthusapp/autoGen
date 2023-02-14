@@ -8,10 +8,10 @@ import { Inputs } from './Utils';
 
 function App() {
   const [inputs, setInputs] = useImmer<Inputs>({
-    colorsMax: '2',
+    colorsMax: '6',
     colorChangeTime: '2.0',
     sceneChangeWaitTime: '2.5',
-    colors: ['#ffffff', '#000000'],
+    colors: ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'],
     white: 'X',
   });
 
