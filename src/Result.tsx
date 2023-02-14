@@ -105,6 +105,7 @@ function Result({ inputs }: Props) {
 
   const autoAloneDelay = Math.round(colorChangeTime * 4);
   const is3CH = white === 'X';
+  const whitePadd = is3CH ? '' : `, ${white}`;
 
   const code = `#undef PWM_CH_MAX
 #define PWM_CH_MAX\t\t${is3CH ? 3 : 4}
@@ -118,7 +119,7 @@ function Result({ inputs }: Props) {
 unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
   {${colors
     .map((color) => color.join(', '))
-    .join(`${is3CH ? '' : `, ${white}`}},\n  {`)}}
+    .join(`${whitePadd}},\n  {`)}${whitePadd}}
 };
 
 #define AUTO_ALONE_DELAY	${autoAloneDelay}

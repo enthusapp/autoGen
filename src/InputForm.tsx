@@ -10,7 +10,7 @@ const Array255 = Array.from({ length: 255 });
 const Array20 = Array.from({ length: 20 });
 
 function InputForm({ inputs, setInputs }: Props) {
-  const { colorChangeTime, colorsMax, sceneChangeWaitTime } = inputs;
+  const { white, colorChangeTime, colorsMax, sceneChangeWaitTime } = inputs;
   const colorInputArray = useMemo(
     () => Array.from({ length: Number(colorsMax) }),
     [colorsMax],
@@ -47,7 +47,22 @@ function InputForm({ inputs, setInputs }: Props) {
           <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
         ))}
       </select>
-      초<h3>Scene 개수</h3>
+      초<h3>4CH White 밝기</h3>
+      <select
+        name="white"
+        value={white}
+        onChange={({ target: { value } }) =>
+          setInputs((draft) => {
+            draft.white = value;
+          })
+        }
+      >
+        <option>X</option>
+        {Array255.map((_, i) => (
+          <option key={getId()}>{i + 1}</option>
+        ))}
+      </select>
+      <h3>Scene 개수</h3>
       <select
         value={colorsMax}
         onChange={({ target: { value } }) =>
