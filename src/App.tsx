@@ -10,7 +10,7 @@ function App() {
   const [inputs, setInputs] = useImmer<Inputs>({
     colorsMax: '2',
     colorChangeTime: '2.0',
-    sceneChangeTime: '2.5',
+    sceneChangeWaitTime: '2.5',
     colors: ['#ffffff', '#000000'],
   });
 

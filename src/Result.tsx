@@ -11,32 +11,48 @@ const height = 200;
 function Result({ inputs }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const {
+    sceneChangeWaitTime: sceneChangeWaitTimeString,
+    colorChangeTime: colorChangeTimeString,
+    colorsMax: colorsMaxString,
+    colors: colorStrings,
+  } = inputs;
+
+  const colorChangeTime = Number(colorChangeTimeString);
+  const sceneChangeWaitTime = Number(sceneChangeWaitTimeString);
+  const colorsMax = Number(colorsMaxString);
+  const colors = colorStrings.map((e) => hexToRgb(e));
+  const stepTime = (colorChangeTime * 1000) / 255;
+
   useEffect(() => {
-    const stepTime = (Number(inputs.colorChangeTime) * 1000) / 255;
     let requestId: number;
     let stepChangedTime = performance.now();
-    let previousTime = performance.now();
-    const nowColors = [...hexToRgb(inputs.colors[0])];
-    let previousColors = hexToRgb(inputs.colors[0]);
-    let targetColors = hexToRgb(inputs.colors[0]);
+    let previousTime = stepChangedTime;
+    let previousColors = colors[0];
+    let targetColors = previousColors;
+    const nowColors = [...previousColors];
     let targetIndex = 0;
 
     const animator = () => {
       const canvas = canvasRef.current;
-      if (!canvas) {
+      const restart = () => {
         requestId = requestAnimationFrame(animator);
+      };
+
+      if (!canvas) {
+        restart();
         return;
       }
 
       const context = canvas.getContext('2d');
       if (!context) {
-        requestId = requestAnimationFrame(animator);
+        restart();
         return;
       }
 
       const now = performance.now();
       if (now - stepChangedTime < stepTime) {
-        requestId = requestAnimationFrame(animator);
+        restart();
         return;
       }
 
@@ -45,11 +61,7 @@ function Result({ inputs }: Props) {
       Array.from({ length: 3 }).forEach((_, i) => {
         const previousColor = previousColors[i];
         const targetColor = targetColors[i];
-        const zeorToMaxTime =
-          stepTime *
-          (targetColor - previousColor) *
-          (previousColor > targetColor ? -1 : 1);
-
+        const zeorToMaxTime = stepTime * Math.abs(targetColor - previousColor);
         if (zeorToMaxTime < colorChangedTime) {
           nowColors[i] = targetColor;
           return;
@@ -63,24 +75,24 @@ function Result({ inputs }: Props) {
         }
         nowColors[i] = Math.round(previousColor + colorChangedTime / stepTime);
       });
-      // eslint-disable-next-line no-console
-      // console.log(colorChangedTime, nowColors, stepTime);
 
       context.fillStyle = `RGB(${nowColors[0]}, ${nowColors[1]}, ${nowColors[2]})`;
       context.fillRect(0, 0, width, height);
 
       stepChangedTime = now;
-      if (now - previousTime < Number(inputs.sceneChangeTime) * 1000) {
-        requestId = requestAnimationFrame(animator);
+      if (now - previousTime < (colorChangeTime + sceneChangeWaitTime) * 1000) {
+        restart();
         return;
       }
+      // eslint-disable-next-line no-console
+      // console.log(colorChangedTime, nowColors, stepTime);
 
       previousColors = targetColors;
       targetIndex += 1;
-      targetIndex %= Number(inputs.colorsMax);
-      targetColors = hexToRgb(inputs.colors[targetIndex]) || [0, 0, 0];
+      targetIndex %= colorsMax;
+      targetColors = colors[targetIndex] || [0, 0, 0];
       previousTime = now;
-      requestId = requestAnimationFrame(animator);
+      restart();
     };
 
     requestId = requestAnimationFrame(animator);
@@ -88,7 +100,7 @@ function Result({ inputs }: Props) {
     return () => {
       if (requestId) cancelAnimationFrame(requestId);
     };
-  }, [inputs]);
+  }, [stepTime, colors, colorChangeTime, sceneChangeWaitTime, colorsMax]);
 
   return (
     <div>
