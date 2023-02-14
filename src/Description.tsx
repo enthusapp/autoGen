@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/react-in-jsx-scope */
 
 function Description() {
