@@ -78,7 +78,7 @@ function InputForm({ inputs, setInputs }: Props) {
           <option key={getId()}>{i + 1}</option>
         ))}
       </select>
-      <h3>Scene</h3>
+      <h3>Scenes</h3>
       {colorInputArray.map((_, i) => (
         <input
           name="color"
