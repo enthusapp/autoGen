@@ -7,9 +7,15 @@ interface Props {
 
 const width = 200;
 const height = 200;
+const ZERO2MAX = 0;
+const WAIT = 1;
 
 function Result({ inputs }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const statusRef = useRef<HTMLParagraphElement>(null);
+  const pauseButtonRef = useRef<HTMLButtonElement>(null);
+  const pauseRef = useRef<boolean>(false);
+  const pauseTimeRef = useRef<number>(0);
 
   const {
     sceneChangeWaitTime: sceneChangeWaitTimeString,
@@ -29,16 +35,45 @@ function Result({ inputs }: Props) {
     let requestId: number;
     let stepChangedTime = performance.now();
     let previousTime = stepChangedTime;
+    let totalTime = stepChangedTime;
     let previousColors = colors[0];
     let targetColors = previousColors;
     const nowColors = [...previousColors];
     let targetIndex = 0;
+    let pauseStatus = false;
+
+    const setTarget = (now: number) => {
+      targetIndex += 1;
+      if (targetIndex === colorsMax) totalTime = now;
+      targetIndex %= colorsMax;
+      targetColors = colors[targetIndex] || [0, 0, 0];
+      previousTime = now;
+    };
+
+    setTarget(stepChangedTime);
 
     const animator = () => {
       const canvas = canvasRef.current;
       const restart = () => {
         requestId = requestAnimationFrame(animator);
       };
+
+      const now = performance.now();
+
+      if (pauseRef.current) {
+        pauseStatus = true;
+        restart();
+        return;
+      }
+
+      if (pauseStatus) {
+        pauseStatus = false;
+
+        const pauseDiff = now - pauseTimeRef.current;
+        stepChangedTime += pauseDiff;
+        previousTime += pauseDiff;
+        totalTime += pauseDiff;
+      }
 
       if (!canvas) {
         restart();
@@ -51,13 +86,13 @@ function Result({ inputs }: Props) {
         return;
       }
 
-      const now = performance.now();
       if (now - stepChangedTime < stepTime) {
         restart();
         return;
       }
 
       const colorChangedTime = now - previousTime;
+      const colorStatus = [ZERO2MAX, ZERO2MAX, ZERO2MAX];
 
       Array.from({ length: 3 }).forEach((_, i) => {
         const previousColor = previousColors[i];
@@ -65,6 +100,7 @@ function Result({ inputs }: Props) {
         const zeorToMaxTime = stepTime * Math.abs(targetColor - previousColor);
         if (zeorToMaxTime < colorChangedTime) {
           nowColors[i] = targetColor;
+          colorStatus[i] = WAIT;
           return;
         }
 
@@ -80,8 +116,16 @@ function Result({ inputs }: Props) {
       context.fillStyle = `RGB(${nowColors[0]}, ${nowColors[1]}, ${nowColors[2]})`;
       context.fillRect(0, 0, width, height);
 
-      // eslint-disable-next-line no-console
-      // console.log(colorChangedTime, nowColors, stepTime);
+      if (statusRef.current)
+        statusRef.current.innerText = `[${nowColors.join(', ')}], ${(
+          (now - totalTime) /
+          1000
+        ).toFixed(1)}s, [${colorStatus
+          .map((e) => (e === ZERO2MAX ? 'z2m' : 'wait'))
+          .join(', ')}], ${(colorChangedTime / 1000).toFixed(
+          1,
+        )}s, ${targetIndex}`;
+
       stepChangedTime = now;
       if (now - previousTime < (colorChangeTime + sceneChangeWaitTime) * 1000) {
         restart();
@@ -89,10 +133,7 @@ function Result({ inputs }: Props) {
       }
 
       previousColors = targetColors;
-      targetIndex += 1;
-      targetIndex %= colorsMax;
-      targetColors = colors[targetIndex] || [0, 0, 0];
-      previousTime = now;
+      setTarget(now);
       restart();
     };
 
@@ -129,6 +170,21 @@ unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
       <h2>결과</h2>
       <h3>시뮬레이션</h3>
       <canvas ref={canvasRef} width={width} height={height} />
+      <p ref={statusRef} />
+      <button
+        type="button"
+        ref={pauseButtonRef}
+        onClick={() => {
+          pauseRef.current = !pauseRef.current;
+          pauseTimeRef.current = performance.now();
+          if (pauseButtonRef.current)
+            pauseButtonRef.current.innerText = pauseRef.current
+              ? 'RUN'
+              : 'PASUSE';
+        }}
+      >
+        PAUSE
+      </button>
       <h3>코드</h3>
       <pre>
         <div className="sourceCode">
