@@ -23,10 +23,6 @@ const GlobalStyle = createGlobalStyle`
     background: transparent;
   }
 
-  a {
-    text-decoration: none;
-  }
-
   code {
     background-color: #eee;
     border-radius: 3px;
@@ -40,10 +36,6 @@ const GlobalStyle = createGlobalStyle`
     background-color: #eee;
     border-radius: 3px;
     padding: 0.2em;
-  }
-
-  iframe {
-    margin: 0 -10px;
   }
 `;
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { hexToRgb, Inputs } from './Utils';
+import { Title, SubTitle } from './Styles';
 
 interface Props {
   inputs: Inputs;
@@ -125,17 +126,19 @@ unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
 #define AUTO_ALONE_DELAY	${autoAloneDelay}
 `;
   return (
-    <div>
-      <h2>결과</h2>
-      <h3>시뮬레이션</h3>
-      <canvas ref={canvasRef} width={width} height={height} />
-      <h3>코드</h3>
+    <>
+      <Title>결과</Title>
+      <SubTitle>시뮬레이션</SubTitle>
+      <div>
+        <canvas ref={canvasRef} width={width} height={height} />
+      </div>
+      <SubTitle>코드</SubTitle>
       <pre>
         <div className="sourceCode">
           <code>{code}</code>
         </div>
       </pre>
-    </div>
+    </>
   );
 }
 
