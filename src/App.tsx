@@ -1,17 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useImmer } from 'use-immer';
-import styled from 'styled-components';
 
 import Result from './Result';
 import InputForm from './InputForm';
 import { Inputs } from './Utils';
 import Description from './Description';
-
-const Page = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 function App() {
   const [inputs, setInputs] = useImmer<Inputs>({
@@ -24,11 +18,9 @@ function App() {
 
   return (
     <Router>
-      <Page>
-        <Description />
-        <InputForm inputs={inputs} setInputs={setInputs} />
-        <Result inputs={inputs} />
-      </Page>
+      <Description />
+      <InputForm inputs={inputs} setInputs={setInputs} />
+      <Result inputs={inputs} />
     </Router>
   );
 }
