@@ -1,5 +1,22 @@
 import React, { useMemo } from 'react';
+import styled from 'styled-components';
 import { getId, Inputs } from './Utils';
+import { Title, SubTitle } from './Styles';
+
+const Text = styled.div`
+  font-size: 15px;
+  margin-left: 5px;
+`;
+
+const Select = styled.select`
+  font-size: 15px;
+  width: 60px;
+`;
+
+const Items = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 interface Props {
   inputs: Inputs;
@@ -17,38 +34,44 @@ function InputForm({ inputs, setInputs }: Props) {
   );
 
   return (
-    <div>
-      <h2>입력</h2>
-      <h3>0 → 100 변화 시간</h3>
-      <select
-        name="colorChangeTime"
-        value={colorChangeTime}
-        onChange={({ target: { value } }) =>
-          setInputs((draft) => {
-            draft.colorChangeTime = value;
-          })
-        }
-      >
-        {Array255.map((_, i) => (
-          <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
-        ))}
-      </select>
-      초<h3>Scene 전환 대기 시간</h3>
-      <select
-        name="sceneChangeWaitTime"
-        value={sceneChangeWaitTime}
-        onChange={({ target: { value } }) =>
-          setInputs((draft) => {
-            draft.sceneChangeWaitTime = value;
-          })
-        }
-      >
-        {Array255.map((_, i) => (
-          <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
-        ))}
-      </select>
-      초<h3>4CH White 밝기</h3>
-      <select
+    <>
+      <Title>입력</Title>
+      <SubTitle>0 → 100 변화 시간</SubTitle>
+      <Items>
+        <Select
+          name="colorChangeTime"
+          value={colorChangeTime}
+          onChange={({ target: { value } }) =>
+            setInputs((draft) => {
+              draft.colorChangeTime = value;
+            })
+          }
+        >
+          {Array255.map((_, i) => (
+            <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
+          ))}
+        </Select>
+        <Text>초</Text>
+      </Items>
+      <SubTitle>Scene 전환 대기 시간</SubTitle>
+      <Items>
+        <Select
+          name="sceneChangeWaitTime"
+          value={sceneChangeWaitTime}
+          onChange={({ target: { value } }) =>
+            setInputs((draft) => {
+              draft.sceneChangeWaitTime = value;
+            })
+          }
+        >
+          {Array255.map((_, i) => (
+            <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
+          ))}
+        </Select>
+        <Text>초</Text>
+      </Items>
+      <SubTitle>4CH White 밝기</SubTitle>
+      <Select
         name="white"
         value={white}
         onChange={({ target: { value } }) =>
@@ -61,9 +84,9 @@ function InputForm({ inputs, setInputs }: Props) {
         {Array255.map((_, i) => (
           <option key={getId()}>{i + 1}</option>
         ))}
-      </select>
-      <h3>Scene 개수</h3>
-      <select
+      </Select>
+      <SubTitle>Scene 개수</SubTitle>
+      <Select
         value={colorsMax}
         onChange={({ target: { value } }) =>
           setInputs((draft) => {
@@ -77,21 +100,23 @@ function InputForm({ inputs, setInputs }: Props) {
         {Array20.map((_, i) => (
           <option key={getId()}>{i + 1}</option>
         ))}
-      </select>
-      <h3>Scenes</h3>
-      {colorInputArray.map((_, i) => (
-        <input
-          name="color"
-          type="color"
-          value={inputs.colors[i]}
-          onChange={({ target: { value } }) =>
-            setInputs((draft) => {
-              draft.colors[i] = value;
-            })
-          }
-        />
-      ))}
-    </div>
+      </Select>
+      <SubTitle>Scenes</SubTitle>
+      <Items>
+        {colorInputArray.map((_, i) => (
+          <input
+            name="color"
+            type="color"
+            value={inputs.colors[i]}
+            onChange={({ target: { value } }) =>
+              setInputs((draft) => {
+                draft.colors[i] = value;
+              })
+            }
+          />
+        ))}
+      </Items>
+    </>
   );
 }
 
