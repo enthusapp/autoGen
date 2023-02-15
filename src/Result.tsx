@@ -1,5 +1,26 @@
 import React, { useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { hexToRgb, Inputs } from './Utils';
+import TitleAndItem from './TitleAndItem';
+import Title from './Title';
+
+const InputsWrap = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const CodeWrap = styled.div`
+  background-color: #eee;
+  border-radius: 3px;
+  padding: 0.2em;
+`;
+
+const Code = styled(CodeWrap)`
+  height: 100%;
+  font-family: 'Courier New';
+  font-size: 0.8em;
+  color: #000;
+`;
 
 interface Props {
   inputs: Inputs;
@@ -166,32 +187,36 @@ unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
 #define AUTO_ALONE_DELAY	${autoAloneDelay}
 `;
   return (
-    <div>
-      <h2>결과</h2>
-      <h3>시뮬레이션</h3>
-      <canvas ref={canvasRef} width={width} height={height} />
-      <p ref={statusRef} />
-      <button
-        type="button"
-        ref={pauseButtonRef}
-        onClick={() => {
-          pauseRef.current = !pauseRef.current;
-          pauseTimeRef.current = performance.now();
-          if (pauseButtonRef.current)
-            pauseButtonRef.current.innerText = pauseRef.current
-              ? 'RUN'
-              : 'PASUSE';
-        }}
-      >
-        PAUSE
-      </button>
-      <h3>코드</h3>
-      <pre>
-        <div className="sourceCode">
-          <code>{code}</code>
-        </div>
-      </pre>
-    </div>
+    <>
+      <Title>결과</Title>
+      <InputsWrap>
+        <TitleAndItem title="시뮬레이션">
+          <canvas ref={canvasRef} width={width} height={height} />
+          <p ref={statusRef} />
+          <button
+            type="button"
+            ref={pauseButtonRef}
+            onClick={() => {
+              pauseRef.current = !pauseRef.current;
+              pauseTimeRef.current = performance.now();
+              if (pauseButtonRef.current)
+                pauseButtonRef.current.innerText = pauseRef.current
+                  ? 'RUN'
+                  : 'PASUSE';
+            }}
+          >
+            PAUSE
+          </button>
+        </TitleAndItem>
+        <TitleAndItem title="코드">
+          <pre>
+            <CodeWrap className="sourceCode">
+              <Code>{code}</Code>
+            </CodeWrap>
+          </pre>
+        </TitleAndItem>
+      </InputsWrap>
+    </>
   );
 }
 

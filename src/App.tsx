@@ -18,13 +18,9 @@ function App() {
 
   return (
     <Router>
-      <div>
-        <Description />
-        <br />
-        <InputForm inputs={inputs} setInputs={setInputs} />
-        <br />
-        <Result inputs={inputs} />
-      </div>
+      <Description />
+      <InputForm inputs={inputs} setInputs={setInputs} />
+      <Result inputs={inputs} />
     </Router>
   );
 }
