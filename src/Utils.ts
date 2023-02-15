@@ -11,7 +11,8 @@ export interface Inputs {
   colorsMax: string;
   sceneChangeWaitTime: string;
   colors: Array<string>;
-  white: string;
+  use4ChannelWhite: boolean;
+  whites: Array<string>;
 }
 
 export function hexToRgb(gr: string) {

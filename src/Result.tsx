@@ -59,7 +59,8 @@ function Result({ inputs }: Props) {
     colorChangeTime: colorChangeTimeString,
     colorsMax: colorsMaxString,
     colors: colorStrings,
-    white,
+    whites,
+    use4ChannelWhite,
   } = inputs;
 
   const colorChangeTime = Number(colorChangeTimeString);
@@ -182,11 +183,8 @@ function Result({ inputs }: Props) {
   }, [stepTime, colors, colorChangeTime, sceneChangeWaitTime, colorsMax]);
 
   const autoAloneDelay = Math.round(colorChangeTime * 4);
-  const is3CH = white === 'X';
-  const whitePadd = is3CH ? '' : `, ${white}`;
-
   const code = `#undef PWM_CH_MAX
-#define PWM_CH_MAX\t\t${is3CH ? 3 : 4}
+#define PWM_CH_MAX\t\t${use4ChannelWhite ? 4 : 3}
 
 #define AUTORUN_SPEED\t\t${Math.round(
     ((colorChangeTime + sceneChangeWaitTime) * 1000) / autoAloneDelay,
@@ -196,8 +194,11 @@ function Result({ inputs }: Props) {
 
 unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
   {${colors
-    .map((color) => color.join(', '))
-    .join(`${whitePadd}},\n  {`)}${whitePadd}}
+    .map(
+      (color, i) =>
+        `${color.join(', ')}${use4ChannelWhite ? `, ${whites[i]}` : ''}`,
+    )
+    .join('},\n  {')}}
 };
 
 #define AUTO_ALONE_DELAY	${autoAloneDelay}

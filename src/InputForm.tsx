@@ -17,11 +17,17 @@ interface Props {
   setInputs: (e: (draft: Inputs) => void) => void;
 }
 
-const Array255 = Array.from({ length: 255 });
+const Array255 = Array.from({ length: 256 });
 const Array20 = Array.from({ length: 20 });
 
 function InputForm({ inputs, setInputs }: Props) {
-  const { white, colorChangeTime, colorsMax, sceneChangeWaitTime } = inputs;
+  const {
+    whites,
+    use4ChannelWhite,
+    colorChangeTime,
+    colorsMax,
+    sceneChangeWaitTime,
+  } = inputs;
   const colorInputArray = useMemo(
     () => Array.from({ length: Number(colorsMax) }),
     [colorsMax],
@@ -65,22 +71,6 @@ function InputForm({ inputs, setInputs }: Props) {
             ))}
           </select>
         </TitleAndItem>
-        <TitleAndItem title="4CH White 밝기">
-          <select
-            name="white"
-            value={white}
-            onChange={({ target: { value } }) =>
-              setInputs((draft) => {
-                draft.white = value;
-              })
-            }
-          >
-            <option>X</option>
-            {Array255.map((_, i) => (
-              <option key={getId()}>{i + 1}</option>
-            ))}
-          </select>
-        </TitleAndItem>
         <TitleAndItem title="Scene 개수">
           <select
             name="colorsMax"
@@ -91,6 +81,9 @@ function InputForm({ inputs, setInputs }: Props) {
                 draft.colors = Array.from({ length: Number(value) }).map(
                   (_, i) => draft.colors[i] || '#000000',
                 );
+                draft.whites = Array.from({ length: Number(value) }).map(
+                  (_, i) => draft.whites[i] || '255',
+                );
               })
             }
           >
@@ -98,6 +91,22 @@ function InputForm({ inputs, setInputs }: Props) {
               <option key={getId()}>{i + 1}</option>
             ))}
           </select>
+        </TitleAndItem>
+        <TitleAndItem title="4CH White 사용">
+          <label htmlFor="use4ChannelWhite">
+            <input
+              id="use4ChannelWhite"
+              type="checkbox"
+              name="use4ChannelWhite"
+              checked={use4ChannelWhite}
+              onChange={({ target: { checked } }) =>
+                setInputs((draft) => {
+                  draft.use4ChannelWhite = !!checked;
+                })
+              }
+            />
+            사용
+          </label>
         </TitleAndItem>
       </InputsWrap>
       <TitleAndItem title="Scenes">
@@ -114,6 +123,25 @@ function InputForm({ inputs, setInputs }: Props) {
           />
         ))}
       </TitleAndItem>
+      {use4ChannelWhite && (
+        <TitleAndItem title="Whites">
+          {colorInputArray.map((_, i) => (
+            <select
+              name="white"
+              value={whites[i]}
+              onChange={({ target: { value } }) =>
+                setInputs((draft) => {
+                  draft.whites[i] = value;
+                })
+              }
+            >
+              {Array255.map((__, j) => (
+                <option key={getId()}>{j}</option>
+              ))}
+            </select>
+          ))}
+        </TitleAndItem>
+      )}
     </form>
   );
 }
