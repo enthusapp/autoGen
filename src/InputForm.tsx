@@ -28,8 +28,12 @@ function InputForm({ inputs, setInputs }: Props) {
   );
 
   return (
-    <>
+    <form>
       <Title>입력</Title>
+      <button type="submit">공유링크 생성</button>
+      <a href="/autoGen">
+        <button type="button">초기화</button>
+      </a>
       <InputsWrap>
         <TitleAndItem title="0 → 100 변화 시간" unit="초">
           <select
@@ -79,6 +83,7 @@ function InputForm({ inputs, setInputs }: Props) {
         </TitleAndItem>
         <TitleAndItem title="Scene 개수">
           <select
+            name="colorsMax"
             value={colorsMax}
             onChange={({ target: { value } }) =>
               setInputs((draft) => {
@@ -109,7 +114,7 @@ function InputForm({ inputs, setInputs }: Props) {
           />
         ))}
       </TitleAndItem>
-    </>
+    </form>
   );
 }
 
