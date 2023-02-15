@@ -13,7 +13,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   div,
-  span {
+  span,
+  pre {
     margin: 0;
     padding: 0;
     border: 0;
@@ -21,21 +22,6 @@ const GlobalStyle = createGlobalStyle`
     font-size: 100%;
     vertical-align: baseline;
     background: transparent;
-  }
-
-  code {
-    background-color: #eee;
-    border-radius: 3px;
-    font-family: 'Courier New';
-    font-size: 0.8em;
-    padding: 0.1em;
-    color: #000
-  }
-
-  div.sourceCode {
-    background-color: #eee;
-    border-radius: 3px;
-    padding: 0.2em;
   }
 `;
 
