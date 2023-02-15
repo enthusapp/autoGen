@@ -22,6 +22,22 @@ const Code = styled(CodeWrap)`
   color: #000;
 `;
 
+const Status = styled.div`
+  font-size: 15px;
+  margin: 10px 0;
+  width: 310px;
+`;
+
+const Button = styled.button.attrs({ type: 'button' })`
+  cursor: pointer;
+  border: 1px solid #aaaaaa;
+  font-size: 17px;
+  padding: 2px 10px;
+  &:hover {
+    background: #c0c0c0;
+  }
+`;
+
 interface Props {
   inputs: Inputs;
 }
@@ -191,22 +207,23 @@ unsigned char auto_senario[AUTORUN_SENARIO_MAX][PWM_CH_MAX] = {
       <Title>결과</Title>
       <InputsWrap>
         <TitleAndItem title="시뮬레이션">
-          <canvas ref={canvasRef} width={width} height={height} />
-          <p ref={statusRef} />
-          <button
-            type="button"
-            ref={pauseButtonRef}
-            onClick={() => {
-              pauseRef.current = !pauseRef.current;
-              pauseTimeRef.current = performance.now();
-              if (pauseButtonRef.current)
-                pauseButtonRef.current.innerText = pauseRef.current
-                  ? 'RUN'
-                  : 'PASUSE';
-            }}
-          >
-            PAUSE
-          </button>
+          <div>
+            <canvas ref={canvasRef} width={width} height={height} />
+            <Status ref={statusRef} />
+            <Button
+              ref={pauseButtonRef}
+              onClick={() => {
+                pauseRef.current = !pauseRef.current;
+                pauseTimeRef.current = performance.now();
+                if (pauseButtonRef.current)
+                  pauseButtonRef.current.innerText = pauseRef.current
+                    ? 'RUN'
+                    : 'PASUSE';
+              }}
+            >
+              PAUSE
+            </Button>
+          </div>
         </TitleAndItem>
         <TitleAndItem title="코드">
           <pre>
