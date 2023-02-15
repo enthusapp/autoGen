@@ -18,12 +18,21 @@ function App() {
         )
       : ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
 
+  const whiteArray = search.getAll('white');
+  const whites =
+    whiteArray.length > 0
+      ? Array.from({ length: Number(colorsMax) }).map(
+          (_, i) => whiteArray[i] || '255',
+        )
+      : ['255', '255', '255', '255', '255', '255'];
+
   const [inputs, setInputs] = useImmer<Inputs>({
     colorsMax,
     colorChangeTime: search.get('colorChangeTime') || '2.0',
     sceneChangeWaitTime: search.get('sceneChangeWaitTime') || '2.5',
     colors,
-    white: search.get('white') || 'X',
+    use4ChannelWhite: !!search.get('use4ChannelWhite'),
+    whites,
   });
 
   return (
