@@ -42,34 +42,44 @@ function InputForm({ inputs, setInputs }: Props) {
       </a>
       <InputsWrap>
         <TitleAndItem title="0 → 100 변화 시간" unit="초">
-          <select
+          <input
+            type="number"
             name="colorChangeTime"
             value={colorChangeTime}
+            min="0.2"
+            max="100"
+            step="0.1"
             onChange={({ target: { value } }) =>
               setInputs((draft) => {
+                if (Number(value) > 100 || Number(value) < 0.2) {
+                  // eslint-disable-next-line no-alert
+                  alert('입력 범위 초과');
+                  return;
+                }
                 draft.colorChangeTime = value;
               })
             }
-          >
-            {Array255.map((_, i) => (
-              <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
-            ))}
-          </select>
+          />
         </TitleAndItem>
         <TitleAndItem title="Scene 전환 대기 시간" unit="초">
-          <select
+          <input
+            type="number"
             name="sceneChangeWaitTime"
             value={sceneChangeWaitTime}
+            min="0"
+            max="65520"
+            step="0.001"
             onChange={({ target: { value } }) =>
               setInputs((draft) => {
+                if (Number(value) > 65520 || Number(value) < 0) {
+                  // eslint-disable-next-line no-alert
+                  alert('입력 범위 초과');
+                  return;
+                }
                 draft.sceneChangeWaitTime = value;
               })
             }
-          >
-            {Array255.map((_, i) => (
-              <option key={getId()}>{(i / 10 + 0.2).toFixed(1)}</option>
-            ))}
-          </select>
+          />
         </TitleAndItem>
         <TitleAndItem title="Scene 개수">
           <select
